@@ -2,6 +2,9 @@ import express from "express";
 import { connectDB } from "./db/connection";
 const app = express();
 app.use(express.json());
+import userRoutes from "./User/user.route";
+
+app.use("/api/user", userRoutes);
 
 async function startServer() {
     connectDB();
