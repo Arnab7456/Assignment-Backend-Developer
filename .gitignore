@@ -1,0 +1,6 @@
+dist
+.env
+.js
+.lock
+node_modules
+.env
