@@ -2,8 +2,9 @@ import UserModel  from "./user.model";
 import CreateUserSchema from "./user.schema";
 import { Router } from "express";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 const router = Router();
-
+const JWT_SECRET = process.env.JWT_SECRET || "";
 export const signup =  async (req : any, res : any) => {
     try {
         const parsedData = CreateUserSchema.safeParse(req.body);
@@ -22,6 +23,36 @@ export const signup =  async (req : any, res : any) => {
         res.status(500).json({
             success: false,
             error: "Internal Server Error"
+        });
+    }
+};
+export const login = async (req: any, res: any) => {
+    try {
+        const { email, password } = req.body;
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Compare password with the hashed one in the DB
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+
+        res.status(200).json({
+            success: true,
+            message: "User logged in successfully",
+            user,
+            token,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error",
         });
     }
 };
