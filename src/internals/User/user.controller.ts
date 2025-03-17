@@ -56,3 +56,19 @@ export const login = async (req: any, res: any) => {
         });
     }
 };
+
+export const getAlluser = async (req: any, res: any) => {
+    try {
+        const users = await UserModel.find().select("-password");
+        res.status(200).json({
+            success: true,
+            message: "Users fetched successfully",
+            users
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
+};
