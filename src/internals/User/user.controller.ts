@@ -72,3 +72,23 @@ export const getAlluser = async (req: any, res: any) => {
         });
     }
 };
+
+export const getUserById = async (req : any, res : any) => {
+    try {
+        const { id } = req.params;
+        const user = await UserModel.findById(id).select("-password");
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        res.status(200).json({
+            success: true,
+            message: "User fetched successfully",
+            user
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
+};
