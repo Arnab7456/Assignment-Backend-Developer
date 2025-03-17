@@ -21,6 +21,7 @@ This is a simple RESTful API built using **TypeScript**, **Express.js**, and **Z
 - **MongoDB** (as the database)
 - **bcrypt** (for password hashing)
 - **jsonwebtoken** (for authentication)
+- **Dokcerfile** (for containerization)
 
 ---
 
