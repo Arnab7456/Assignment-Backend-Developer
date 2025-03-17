@@ -92,3 +92,24 @@ export const getUserById = async (req : any, res : any) => {
         });
     }
 };
+
+export const updateUser = async (req : any, res : any) => {
+    try {
+        const { id } = req.params;
+        const { name, email, password, age } = req.body;
+        const user = await UserModel.findByIdAndUpdate(id, { name, email, password, age }, { new: true }).select("-password");
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        res.status(200).json({
+            success: true,
+            message: "User updated successfully",
+            user
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
+};
